@@ -199,11 +199,64 @@ namespace hotkeys
            
         }
 
+        private TextBlock Regel(string tekst)
+        {
+            TextBlock deRegel = new TextBlock();
+
+            deRegel.Text = tekst;
+            deRegel.FontFamily = TextBoxVoorbeeld.FontFamily;
+            deRegel.FontSize = TextBoxVoorbeeld.FontSize;
+            deRegel.FontStyle = TextBoxVoorbeeld.FontStyle;
+            deRegel.FontWeight = TextBoxVoorbeeld.FontWeight;
+            deRegel.Margin = new Thickness(96, vertPositie, 96, 96);
+            vertPositie += 30;
+
+            return deRegel;
+        }
+
+        private FixedDocument StelAfdrukSamen()
+        {
+            FixedDocument document = new FixedDocument();
+            document.DocumentPaginator.PageSize = new System.Windows.Size(A4Breedte, A4Hoogte);
+
+            PageContent inhoud = new PageContent();
+            document.Pages.Add(inhoud);  // (fixeddocument) document heeft een pagesize en pages (inhoud)
+
+            FixedPage page = new FixedPage();
+            inhoud.Child = page;  // (pagecontent) inhoud heeft een page
+
+            page.Width = A4Breedte;
+            page.Height = A4Hoogte;
+            vertPositie = 96;
+
+            page.Children.Add(Regel("Gebruikte lettertype : " + TextBoxVoorbeeld.FontFamily.ToString()));  // (fixedpage) page heeft sizes en regels
+            page.Children.Add(Regel("Gewicht van het lettertype : " + TextBoxVoorbeeld.FontWeight.ToString()));
+            page.Children.Add(Regel("Stijl van  het lettertype : " + TextBoxVoorbeeld.FontStyle.ToString()));
+            page.Children.Add(Regel("Dikte van het lettertype : " + TextBoxVoorbeeld.FontSize.ToString()));
+            page.Children.Add(Regel(" "));
+            page.Children.Add(Regel("Tekst"));
+            for (int i = 0; i < TextBoxVoorbeeld.LineCount;i++)
+            {
+                page.Children.Add(Regel(TextBoxVoorbeeld.GetLineText(i)));
+            }
+
+            return document;
+            
 
 
+
+
+
+
+        }
         private void PrintExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            PrintDialog afdrukken = new PrintDialog();
 
+            if (afdrukken.ShowDialog() == true)
+            {
+                afdrukken.PrintDocument(StelAfdrukSamen().DocumentPaginator, "tekstbox");
+            }
         }
     }
 }
