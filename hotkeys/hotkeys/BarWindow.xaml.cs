@@ -47,12 +47,14 @@ namespace hotkeys
             if (TextBoxVoorbeeld.FontWeight == FontWeights.Normal)
             {
                 TextBoxVoorbeeld.FontWeight = FontWeights.Bold;
-                MenuVet.IsChecked = true;
+                Vet.IsChecked = true;
+                ButtonVet.IsChecked = true;
             }
             else
             {
                 TextBoxVoorbeeld.FontWeight = FontWeights.Normal;
-                MenuVet.IsChecked = false;
+                Vet.IsChecked = false;
+                ButtonVet.IsChecked = false;
             }
         }
 
@@ -66,12 +68,14 @@ namespace hotkeys
             if (TextBoxVoorbeeld.FontStyle == FontStyles.Normal)
             {
                 TextBoxVoorbeeld.FontStyle = FontStyles.Italic;
-                MenuSchuin.IsChecked = true;
+                Schuin.IsChecked = true;
+                ButtonSchuin.IsChecked = true;
             }
             else
             {
                 TextBoxVoorbeeld.FontStyle = FontStyles.Normal;
-                MenuSchuin.IsChecked = false;
+                Schuin.IsChecked = false;
+                ButtonSchuin.IsChecked = false;
             }
         }
 
@@ -90,7 +94,7 @@ namespace hotkeys
             }
             hetLettertype.IsChecked = true;
 
-            TextBoxVoorbeeld.FontFamily = 
+            LetterTypeCombobox.SelectedItem = 
                 new FontFamily(hetLettertype.Header.ToString());
         }
 
@@ -104,5 +108,21 @@ namespace hotkeys
             Schuin_Aan_Uit();
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            LetterTypeCombobox.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Source", System.ComponentModel.ListSortDirection.Ascending));
+            LetterTypeCombobox.SelectedItem = new FontFamily(TextBoxVoorbeeld.FontFamily.ToString());
+        }
+
+        private void LetterTypeCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            foreach (MenuItem huidig in Fontjes.Items)
+            {
+                if (LetterTypeCombobox.SelectedItem.ToString() == huidig.Header.ToString())
+                    huidig.IsChecked = true;
+                else
+                    huidig.IsChecked = false;
+            }
+        }
     }
 }
