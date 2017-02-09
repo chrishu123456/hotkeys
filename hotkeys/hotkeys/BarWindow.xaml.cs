@@ -12,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
+using System.IO;
+using System.ComponentModel;
+
 
 namespace hotkeys
 {
@@ -22,6 +26,10 @@ namespace hotkeys
     {
         public static RoutedCommand mijnRoutectrlb = new RoutedCommand();
         public static RoutedCommand mijnRoutectrli = new RoutedCommand();
+
+        private double A4Breedte = 21 /2.54 * 96;
+        private double A4Hoogte = 29.7 /2.54 * 96;
+        private double vertPositie;
 
         public BarWindow()
         {
@@ -42,19 +50,21 @@ namespace hotkeys
             this.InputBindings.Add(mijnKeyCtrlI);
         }
 
-        private void Vet_Aan_Uit()
+        private void Vet_Aan_Uit(Boolean wissel = false)
         {
-            if (TextBoxVoorbeeld.FontWeight == FontWeights.Normal)
+            if (( wissel == true && TextBoxVoorbeeld.FontWeight == FontWeights.Bold) || (wissel == false && TextBoxVoorbeeld.FontWeight == FontWeights.Normal))
             {
                 TextBoxVoorbeeld.FontWeight = FontWeights.Bold;
                 Vet.IsChecked = true;
                 ButtonVet.IsChecked = true;
+                StatusVet.FontWeight = FontWeights.Bold;
             }
             else
             {
                 TextBoxVoorbeeld.FontWeight = FontWeights.Normal;
                 Vet.IsChecked = false;
                 ButtonVet.IsChecked = false;
+                StatusVet.FontWeight = FontWeights.Normal;
             }
         }
 
@@ -63,19 +73,21 @@ namespace hotkeys
             Vet_Aan_Uit();
         }
 
-        private void Schuin_Aan_Uit()
+        private void Schuin_Aan_Uit(Boolean wissel = false)
         {
-            if (TextBoxVoorbeeld.FontStyle == FontStyles.Normal)
+            if ((wissel == true && TextBoxVoorbeeld.FontStyle == FontStyles.Italic) || (wissel == false && TextBoxVoorbeeld.FontStyle == FontStyles.Normal ))
             {
                 TextBoxVoorbeeld.FontStyle = FontStyles.Italic;
                 Schuin.IsChecked = true;
                 ButtonSchuin.IsChecked = true;
+                StatusSchuin.FontStyle = FontStyles.Italic;
             }
             else
             {
                 TextBoxVoorbeeld.FontStyle = FontStyles.Normal;
                 Schuin.IsChecked = false;
                 ButtonSchuin.IsChecked = false;
+                StatusSchuin.FontStyle = FontStyles.Normal;
             }
         }
 
@@ -123,6 +135,75 @@ namespace hotkeys
                 else
                     huidig.IsChecked = false;
             }
+        }
+
+        private void SaveExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                SaveFileDialog dlg = new SaveFileDialog();
+                dlg.FileName = "Document";
+                dlg.DefaultExt = ".txt";
+                dlg.Filter = "Text Documents | *.txt";
+
+                if (dlg.ShowDialog() == true)
+                {
+                    using (StreamWriter bestand = new StreamWriter(dlg.FileName))
+                    {
+                        
+                        bestand.WriteLine(LetterTypeCombobox.SelectedValue);
+                        bestand.WriteLine(TextBoxVoorbeeld.FontWeight.ToString());
+                        bestand.WriteLine(TextBoxVoorbeeld.FontStyle.ToString());
+                        bestand.WriteLine(TextBoxVoorbeeld.Text);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Opslaan mislukt : " + ex.Message);
+            }
+        }
+
+        private void OpenExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog dlg = new OpenFileDialog();
+                dlg.FileName = "Document";
+                dlg.DefaultExt = "*.txt";
+                dlg.Filter = "Text Documents | *.txt";
+
+             
+                if (dlg.ShowDialog() == true)
+                {
+                    using (StreamReader bestand = new StreamReader(dlg.FileName))
+                    {
+                        LetterTypeCombobox.SelectedValue = new FontFamily(bestand.ReadLine());
+
+                        TypeConverter convertBold = TypeDescriptor.GetConverter(typeof(FontWeight));
+                        TextBoxVoorbeeld.FontWeight = (FontWeight)convertBold.ConvertFromString(bestand.ReadLine());
+                        Vet_Aan_Uit(true);
+                        TypeConverter convertStyle = TypeDescriptor.GetConverter(typeof(FontStyle));
+                        TextBoxVoorbeeld.FontStyle = (FontStyle)convertStyle.ConvertFromString(bestand.ReadLine());
+                        Schuin_Aan_Uit(true);
+
+                        TextBoxVoorbeeld.Text = bestand.ReadLine();
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("openen mislukt : " + ex.Message);
+            }
+           
+        }
+
+
+
+        private void PrintExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+
         }
     }
 }

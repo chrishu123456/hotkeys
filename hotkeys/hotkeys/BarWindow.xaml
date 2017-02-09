@@ -12,6 +12,13 @@
         <CommandBinding
             Command="{x:Static custom:BarWindow.mijnRoutectrli}"
             Executed="ctrliExecuted" />
+
+        <CommandBinding Command="Save" Executed="SaveExecuted" />
+
+        <CommandBinding Command="Open" Executed="OpenExecuted" />
+
+        <CommandBinding Command="Print" Executed="PrintExecuted" />
+        
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -23,6 +30,16 @@
 
     <DockPanel>
         <Menu Height="24" Name="MenuBalk" DockPanel.Dock="Top">
+            <MenuItem Header="Bestand">
+                <MenuItem Header="Openen" Command="Open"></MenuItem>
+                <MenuItem Header="Opslaan" Command="Save"></MenuItem>
+                <MenuItem Header="AfdrukVoorbeeld" Command="PrintPreview"></MenuItem>
+                <MenuItem Header="Afdrukken..." Command="Print"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Afsluiten" Command="Close"></MenuItem>
+            </MenuItem>
+            
+            
             <MenuItem Header="_Lettertype">
                 <MenuItem Name="Fontjes" Header="Font">
                     <MenuItem Name="Courier" Header="Courier New" IsCheckable="True" Click="Lettertype_Click"></MenuItem>
@@ -33,6 +50,20 @@
             </MenuItem>
         </Menu>
         <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar Name="Bestandsbalk">
+                <Button Command="Open">
+                    <Image Source="Images/open.png"></Image>
+                </Button>
+                <Button Command="Save">
+                    <Image Source="Images/save.png"></Image>
+                </Button>
+                <Button Command="PrintPreview">
+                    <Image Source="Images/preview.png"></Image>
+                </Button>
+                <Button Command="Print">
+                    <Image Source="Images/print.png"></Image>
+                </Button>
+            </ToolBar>
             <ToolBar Name="EditeerBalk">
                 <Button Command="Cut">
                     <Image Source="images/cut.png"></Image>
