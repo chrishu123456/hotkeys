@@ -258,5 +258,24 @@ namespace hotkeys
                 afdrukken.PrintDocument(StelAfdrukSamen().DocumentPaginator, "tekstbox");
             }
         }
+
+        private void PrintPreviewExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            Afdrukvoorbeeld preview = new Afdrukvoorbeeld();
+
+            preview.Owner = this;
+            preview.AfdrukDocument = StelAfdrukSamen();
+            preview.ShowDialog();
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (MessageBox.Show("Programma afsluiten ?", "Close", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No) e.Cancel = true; 
+        }
+
+        private void CloseExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:custom="clr-namespace:hotkeys"
-        Title="BarWindow" Height="350" Width="525" Loaded="Window_Loaded">
+        Title="BarWindow" Height="350" Width="525" Loaded="Window_Loaded" Closing="Window_Closing">
     
     <Window.CommandBindings>
         <CommandBinding
@@ -18,7 +18,10 @@
         <CommandBinding Command="Open" Executed="OpenExecuted" />
 
         <CommandBinding Command="Print" Executed="PrintExecuted" />
-        
+
+        <CommandBinding Command="PrintPreview" Executed="PrintPreviewExecuted" />
+
+        <CommandBinding Command="Close" Executed="CloseExecuted" />
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -51,6 +54,9 @@
         </Menu>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar Name="Bestandsbalk">
+                <Button Command="Close">
+                    <Image Source="Images/afsluiten.png"></Image>
+                </Button>
                 <Button Command="Open">
                     <Image Source="Images/open.png"></Image>
                 </Button>
